@@ -1,5 +1,7 @@
 package lucascb.viacep;
 
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView textViewUnidade;
     private TextView textViewIBGE;
     private TextView textViewGIA;
+    private ViaCEP viacep;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,21 +46,30 @@ public class MainActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        ViaCEP viacep = new ViaCEP();
+                        viacep = new ViaCEP();
                         viacep.buscar(cep);
 
+                        handler.sendEmptyMessage(0);
                     }
                 }).start();
-
-                textViewLogradouro.setText(viacep.getLogradouro());
-                textViewComplemento.setText(viacep.getComplemento());
-                textViewBairro.setText(viacep.getBairro());
-                textViewLocalidade.setText(viacep.getLocalidade());
-                textViewUF.setText(viacep.getUf());
-                textViewUnidade.setText(viacep.getUnidade());
-                textViewIBGE.setText(viacep.getIbge());
-                textViewGIA.setText(viacep.getGia());
             }
         });
     }
+
+    Handler handler = new Handler(){
+        public void handleMessage(Message m ) {
+            switch (m.what) {
+                case 0:
+                    textViewLogradouro.setText(viacep.getLogradouro());
+                    textViewComplemento.setText(viacep.getComplemento());
+                    textViewBairro.setText(viacep.getBairro());
+                    textViewLocalidade.setText(viacep.getLocalidade());
+                    textViewUF.setText(viacep.getUf());
+                    textViewUnidade.setText(viacep.getUnidade());
+                    textViewIBGE.setText(viacep.getIbge());
+                    textViewGIA.setText(viacep.getGia());
+                    break;
+            }
+        }
+    };
 }
